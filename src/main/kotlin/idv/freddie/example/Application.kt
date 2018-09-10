@@ -6,10 +6,11 @@ fun log(message: String) = println("[${Thread.currentThread().name}] $message")
 
 var continuation: Continuation<Int>? = null
 
-class SimpleCoroutine<T>(override val context: CoroutineContext) : Continuation<T> {
+class SimpleCoroutine<T>(override val context: CoroutineContext = EmptyCoroutineContext) : Continuation<T> {
 
     override fun resume(value: T) {
-        log("[POINT12] resume in SimpleCoroutine2")
+        log("[POINT12] resume in SimpleCoroutine")
+        continuation = null
     }
 
     override fun resumeWithException(exception: Throwable) {
@@ -24,10 +25,10 @@ class SimpleCoroutine<T>(override val context: CoroutineContext) : Continuation<
 fun main(args: Array<String>) {
 
     // Start a coroutine
-    SimpleCoroutine<Unit>(EmptyCoroutineContext).startCoroutine {
+    SimpleCoroutine<Unit>().startCoroutine {
         log("[POINT1] Before invoking a()")
-        val a = a()
-        log("[POINT2] Result is $a")
+        val resultA = a()
+        log("[POINT2] Result is $resultA")
     }
 
     5.downTo(0).forEach {
@@ -38,9 +39,9 @@ fun main(args: Array<String>) {
 }
 
 suspend fun a(): Int {
-    log("[POINT5] entering a")
+    log("[POINT5] entering b in a")
     val result = b()
-    log("[POINT6] leaving b")
+    log("[POINT6] leaving b in a")
     return result
 }
 
