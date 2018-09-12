@@ -12,8 +12,8 @@ fun main(args: Array<String>) = runBlocking {
     val coroutineRunningTime = useCoroutines()
 
     print(
-            "thread: $threadRunningTime\n" +
-            "coroutines: $coroutineRunningTime\n"
+            "thread: $threadRunningTime ms in threads\n" +
+            "using $coroutineRunningTime ns in coroutines\n"
     )
 }
 
@@ -27,7 +27,7 @@ fun useThread(): Long =
                 if (!threadMap.containsKey(Thread.currentThread().name)) {
                     threadMap[Thread.currentThread().name] = it
                 }
-                print("${Thread.currentThread().name}\n")
+                print(".")
             }
         }
         jobs.forEach { it.join() }
@@ -43,7 +43,7 @@ suspend fun useCoroutines(): Long =
                     if (!threadMap.containsKey(Thread.currentThread().name)) {
                         threadMap[Thread.currentThread().name] = it
                     }
-                    print("${Thread.currentThread().name}\n")
+                    print(".")
                 }
             }
             jobs.forEach { it.join() }

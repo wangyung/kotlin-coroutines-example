@@ -1,26 +1,15 @@
 package idv.freddie.example
 
+import java.util.concurrent.ThreadLocalRandom
+import kotlin.concurrent.thread
 import kotlin.coroutines.experimental.*
+import kotlin.math.abs
 
 fun log(message: String) = println("[${Thread.currentThread().name}] $message")
 
 var continuation: Continuation<Int>? = null
 
-class SimpleCoroutine<T>(override val context: CoroutineContext = EmptyCoroutineContext) : Continuation<T> {
-
-    override fun resume(value: T) {
-        log("[POINT12] resume in SimpleCoroutine")
-        continuation = null
-    }
-
-    override fun resumeWithException(exception: Throwable) {
-        throw exception
-    }
-
-    fun startCoroutine(block: suspend () -> T) {
-        block.startCoroutine(this)
-    }
-}
+val useThread = false
 
 fun main(args: Array<String>) {
 
@@ -31,32 +20,45 @@ fun main(args: Array<String>) {
         log("[POINT2] Result is $resultA")
     }
 
-    5.downTo(0).forEach {
-        log("[POINT3] it: $it")
-        continuation?.resume(it)
+    if (!useThread) {
+        (4990..5010).forEach {
+            continuation?.resume(it) ?: return@forEach
+        }
     }
-    log("[POINT4] Leaving main()")
+
+    log("[POINT3] Leaving main()")
 }
 
 suspend fun a(): Int {
-    log("[POINT5] entering b in a")
+    log("[POINT4] entering b in a")
     val result = b()
-    log("[POINT6] leaving b in a")
+    log("[POINT5] leaving b in a")
     return result
 }
 
 suspend fun b(): Int {
-    log("[POINT7] entering b()")
+    log("[POINT6] entering b()")
+    var counter = 0
     while (true) {
-        log("[POINT8] before suspend")
+        log("[POINT7] before suspend")
         val i: Int = suspendCoroutine { cont ->
-            log("[POINT9] assign continuation")
-            continuation = cont
+            log("[POINT8] in suspendCoroutine")
+            if (useThread) {
+                thread {
+                    val sleepTime = abs(ThreadLocalRandom.current().nextLong()) % 1000
+                    Thread.sleep(sleepTime)
+                    cont.resume(sleepTime.toInt())
+                }
+            } else {
+                continuation = cont
+            }
         }
-        log("[POINT10] After suspend, i = $i")
-        if (i == 0) {
-            log("[POINT11] leaving b()")
-            return 0
+        log("[POINT9] After suspend, i = $i")
+        counter += i
+        if (counter > 5000) {
+            log("[POINT10] leaving b()")
+            continuation = null
+            return counter
         }
     }
 }
