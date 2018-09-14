@@ -47,16 +47,18 @@ suspend fun b(): Int {
                 thread {
                     val sleepTime = abs(ThreadLocalRandom.current().nextLong()) % 1000
                     Thread.sleep(sleepTime)
+                    log("[POINT9] before resume")
                     cont.resume(sleepTime.toInt())
+                    log("[POINT10] leaving thread")
                 }
             } else {
                 continuation = cont
             }
         }
-        log("[POINT9] After suspend, i = $i")
+        log("[POINT11] After suspend, i = $i")
         counter += i
         if (counter > 5000) {
-            log("[POINT10] leaving b()")
+            log("[POINT12] leaving b()")
             continuation = null
             return counter
         }
