@@ -22,16 +22,20 @@ fun useThread(): Long =
     measureTimeMillis {
         val threadMap = mutableMapOf<String, Int>()
         val jobs = List(10000) {
-            thread {
-                Thread.sleep(1000)
-                if (!threadMap.containsKey(Thread.currentThread().name)) {
-                    threadMap[Thread.currentThread().name] = it
+            try {
+                thread {
+                    Thread.sleep(1000)
+                    if (!threadMap.containsKey(Thread.currentThread().name)) {
+                        threadMap[Thread.currentThread().name] = it
+                    }
+                    print(".")
                 }
-                print(".")
+            } catch (e: OutOfMemoryError) {
+                print("[OOM] oops!\n")
             }
         }
-        jobs.forEach { it.join() }
-        print("The number of threads: ${threadMap.size}\n")
+        jobs.forEach { (it as? Thread)?.join() }
+        print("\nThe number of threads: ${threadMap.size}\n")
     }
 
 suspend fun useCoroutines(): Long =
@@ -47,6 +51,6 @@ suspend fun useCoroutines(): Long =
                 }
             }
             jobs.forEach { it.join() }
-            print("The number of threads: ${threadMap.size}\n")
+            print("\nThe number of threads of coroutines: ${threadMap.size}\n")
         }
 
