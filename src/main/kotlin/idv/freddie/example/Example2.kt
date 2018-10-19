@@ -10,7 +10,7 @@ fun log(message: String) = println("[${Thread.currentThread().name}] $message")
 
 var continuation: Continuation<Int>? = null
 
-const val useThread = true
+const val useThread = false
 
 fun runExample2() {
     // Start a coroutine
@@ -21,7 +21,7 @@ fun runExample2() {
     }
 
     if (!useThread) {
-        print("[POINTXXX] before for loop")
+        print("[POINT14] before for loop")
         (4990..5010).forEach {
             continuation?.resume(it) ?: return@forEach
         }

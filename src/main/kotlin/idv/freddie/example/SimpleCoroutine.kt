@@ -8,7 +8,7 @@ import kotlin.coroutines.experimental.startCoroutine
 class SimpleCoroutine<T>(override val context: CoroutineContext = EmptyCoroutineContext) : Continuation<T> {
 
     override fun resume(value: T) {
-        log("[POINT12] resume in SimpleCoroutine")
+        log("[POINT13] resume in SimpleCoroutine")
     }
 
     override fun resumeWithException(exception: Throwable) {
