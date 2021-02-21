@@ -1,8 +1,9 @@
 package idv.freddie.example
 
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlin.concurrent.thread
 import kotlin.system.measureTimeMillis
 
@@ -40,7 +41,7 @@ suspend fun useCoroutines(): Long =
         measureTimeMillis {
             val threadMap = mutableMapOf<String, Int>()
             val jobs = List(10000) {
-                launch {
+                GlobalScope.launch {
                     delay(1000)
                     if (!threadMap.containsKey(Thread.currentThread().name)) {
                         threadMap[Thread.currentThread().name] = it

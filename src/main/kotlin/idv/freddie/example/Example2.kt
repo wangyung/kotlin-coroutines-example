@@ -2,8 +2,9 @@ package idv.freddie.example
 
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.concurrent.thread
-import kotlin.coroutines.experimental.Continuation
-import kotlin.coroutines.experimental.suspendCoroutine
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 import kotlin.math.abs
 
 fun log(message: String) = println("[${Thread.currentThread().name}] $message")

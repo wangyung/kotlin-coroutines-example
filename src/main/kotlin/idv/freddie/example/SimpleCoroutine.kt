@@ -1,18 +1,17 @@
 package idv.freddie.example
 
-import kotlin.coroutines.experimental.Continuation
-import kotlin.coroutines.experimental.CoroutineContext
-import kotlin.coroutines.experimental.EmptyCoroutineContext
-import kotlin.coroutines.experimental.startCoroutine
+import idv.freddie.example.log
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.coroutines.startCoroutine
 
-class SimpleCoroutine<T>(override val context: CoroutineContext = EmptyCoroutineContext) : Continuation<T> {
+class SimpleCoroutine<T>(
+    override val context: CoroutineContext = EmptyCoroutineContext
+) : Continuation<T> {
 
-    override fun resume(value: T) {
+    override fun resumeWith(result: Result<T>) {
         log("[POINT13] resume in SimpleCoroutine")
-    }
-
-    override fun resumeWithException(exception: Throwable) {
-        throw exception
     }
 
     fun startCoroutine(block: suspend () -> T) {
